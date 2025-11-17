@@ -3,11 +3,12 @@ from datetime import datetime, timezone
 from config.database import Base
 from models.Enums import nivelAcesso
 
-class Usuarios(Base):
+class Usuario(Base):
     
     __tablename__ = "usuarios"
 
     id = Column(Integer, primary_key = True, index = True)
+    matricula = Column(Integer, nullable = False, index = True)
     name =  Column(String, nullable = False)
     senha = Column(String, nullable = False)
     email = Column(String, nullable = False, unique = True)

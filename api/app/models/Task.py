@@ -5,7 +5,7 @@ from config.database import Base
 from models.Enums import statusTask
 
 class Task(Base):
-    __tablename__ = "Tasks"
+    __tablename__ = "tasks"
 
     id = Column(Integer, primary_key = True, index = True)
     title = Column(String, nullable = False)
@@ -16,4 +16,4 @@ class Task(Base):
     usuarioTaskId = Column(Integer, ForeignKey("usuarios.id"))
     usuarioTask = relationship("Usuario", foreign_keys = [usuarioTaskId])
     dateTaskCreate = Column(DateTime(timezone = True), default = lambda:datetime.now(timezone.utc), nullable = False)
-    dateTaskEnd = Column(DateTime(timezone=True), default = lambda: datetime.now(timezone.utc) + timedelta(days = 7),nullable = False)
+    dateTaskEnd = Column(DateTime(timezone=True), default = lambda: datetime.now(timezone.utc) + timedelta(days = 7),nullable = False)  

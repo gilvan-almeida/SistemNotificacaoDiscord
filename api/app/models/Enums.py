@@ -8,5 +8,6 @@ class statusTask(PyEnum):
     CRIADO = "Criado"
     INICIADO = "Iniciado"
     PAUSA = "Pausado"
+    ATRASADA = "Atrasada"
     ENCERRADO = "Encerrado"
     CANCELADO = "Cancelado"
