@@ -1,0 +1,11 @@
+# =========================================================
+# Arquivos de Variáveis de Ambiente (MUITO IMPORTANTE!)
+# =========================================================
+# Seus arquivos .env específicos
+api/.env
+bot/.env
+
+# Outros arquivos de ambiente comuns (para garantir)
+*.env
+.env.*
+.flaskenv
