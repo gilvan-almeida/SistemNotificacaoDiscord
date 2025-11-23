@@ -20,6 +20,9 @@ def get_db():
 def criarUsuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     return UsuarioService.criarUsuario(usuario, db)
 
+@router.get("/{discordId}", response_model = UsuarioResponse)
+def buscarUserDiscordId(discordId: str, db: Session = Depends(get_db)):
+    return UsuarioService.buscarUserDiscordId(db, discordId)
 
 @router.get("/", response_model= List[UsuarioResponse])
 def listarUsuario(db: Session = Depends(get_db)):

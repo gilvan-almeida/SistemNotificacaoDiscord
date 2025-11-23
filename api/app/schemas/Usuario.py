@@ -22,7 +22,7 @@ class UsuarioCreate(BaseModel):
     email: str
     discordId: str
     acesso: nivelAcesso = nivelAcesso.USER    
-    dataCreateUser: datetime
+    dataCreateUser: Optional[datetime] = datetime.now()
 
 class UsuarioUpdate(BaseModel):
     matricula: Optional[int] = None

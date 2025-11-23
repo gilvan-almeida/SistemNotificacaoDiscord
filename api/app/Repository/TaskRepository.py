@@ -1,5 +1,7 @@
 from fastapi import HTTPException
 from models.Task import Task
+from models.Usuario import Usuario
+from models.Enums import statusTask
 from sqlalchemy.orm import Session
 
 class TaskRepository:
@@ -14,6 +16,10 @@ class TaskRepository:
     @staticmethod
     def getTaskId(db: Session, id: int):
         return db.query(Task).filter(Task.id == id).first()
+    
+    @staticmethod
+    def getTaskDiscrodId(db: Session, discordId: str):
+        return db.query(Task).join(Task.usuarioTask).filter(Usuario.discordId == discordId).filter(Task.status == statusTask.CRIADO).first()
     
     @staticmethod
     def listarTasks(db: Session):

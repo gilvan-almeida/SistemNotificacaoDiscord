@@ -26,6 +26,10 @@ class UsuarioRepository:
     @staticmethod
     def listarUsuarios(db: Session):
         return db.query(Usuario).all()
+    
+    @staticmethod
+    def getDiscordID(db: Session, discordId: str):
+        return db.query(Usuario).filter(Usuario.discordId == discordId).first()
 
     @staticmethod
     def editarDadosUser(db: Session, id: int, newDados: dict):
@@ -40,7 +44,7 @@ class UsuarioRepository:
 
     @staticmethod
     def deleteUser(db: Session, id:int):
-        usuario = db.query(Usuario).filter(Usuario .id == id).first()
+        usuario = db.query(Usuario).filter(Usuario.id == id).first()
         if not usuario:
             return None
         db.delete(usuario)

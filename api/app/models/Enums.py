@@ -11,3 +11,9 @@ class statusTask(PyEnum):
     ATRASADA = "Atrasada"
     ENCERRADO = "Encerrado"
     CANCELADO = "Cancelado"
+
+class statusSecaoEnum(PyEnum):
+    CRIADA = "Criada"
+    ATIVA = "Ativa"
+    PAUSADA = "Pausada"
+    FINALIZADA = "Finalizada"

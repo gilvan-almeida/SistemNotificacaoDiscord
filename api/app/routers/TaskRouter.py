@@ -21,3 +21,11 @@ def criarTask(task: TaskCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model = List[TaskResponse])
 def listarTasks(db: Session = Depends(get_db)):
     return TaskService.listarTask(db)
+
+@router.get("/{discordId}", response_model= TaskResponse)
+def buscarDiscordID(discordId: str, db: Session = Depends(get_db)):
+    buscar = TaskService.buscarDiscordID(db, discordId)
+    if not buscar:
+        raise HTTPException(status_code = 404, detail = "nenhuma task encontrada para esse usuario")
+    return buscar
+    

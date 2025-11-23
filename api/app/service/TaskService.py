@@ -31,6 +31,11 @@ class TaskService:
         tasks = TaskRepository.listarTasks(db)
         return [TaskResponse.model_validate(i) for i in tasks]
     
-    # def deleteTask(db: Session, id: int):
+    @staticmethod
+    def buscarDiscordID(db: Session, discordId: str):
+        if discordId != None:
+            buscar = TaskRepository.getTaskDiscrodId(db, discordId)
+        return buscar
+
 
     

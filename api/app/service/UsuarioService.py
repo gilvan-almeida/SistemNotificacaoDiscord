@@ -12,16 +12,26 @@ class UsuarioService:
         if UsuarioRepository.getMatriculaUser(db, usuario.matricula):
             raise HTTPException(status_code = 400, detail = "Matricula ja Cadastrada")
         
+        if UsuarioRepository.getDiscordID(db, usuario.discordId):
+            raise HTTPException(status_code = 400, detail = "DiscordId ja cadastrado")
+        
         newUsuario = Usuario(
             name = usuario.name,
             email = usuario.email,
             senha = usuario.senha,
             matricula = usuario.matricula,
             acesso = usuario.acesso,
-            discordId=  usuario.discordId
+            discordId =  usuario.discordId
         )
 
         return UsuarioRepository.criarUser(db, newUsuario)
+    
+    @staticmethod
+    def buscarUserDiscordId(db, discordId: str):
+        result = UsuarioRepository.getDiscordID(db, discordId)
+        if not result:
+            raise HTTPException(status_code = 404, detail =  "Error, usuario com discord Id não foi encontrado")
+        return result
 
     @staticmethod
     def listarUsuarios(db):

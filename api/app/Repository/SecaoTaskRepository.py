@@ -1,5 +1,6 @@
 from fastapi import HTTPException
 from models.SecaoTask import SecaoTask
+from models.Enums import statusSecaoEnum
 from sqlalchemy.orm import Session
 
 class SecaoTaskRepository:
@@ -28,3 +29,28 @@ class SecaoTaskRepository:
         db.commit()
 
         return True
+    
+
+    @staticmethod
+    def getStatusSecaoUser(db: Session, userId: int):
+        return db.query(SecaoTask).filter(
+            SecaoTask.userId == userId, 
+            SecaoTask.statusSecao.in_([statusSecaoEnum.ATIVA, statusSecaoEnum.PAUSADA])
+            ).order_by(SecaoTask.id.desc()).first()
+
+        
+
+    @staticmethod
+    def salvarObject(db: Session, secaoTask: SecaoTask):
+        db.commit()
+        db.refresh(secaoTask)
+        return secaoTask
+
+    @staticmethod
+    def deletarSecao(db: Session, secaoId: int):
+        user = db.query(SecaoTask).filter(SecaoTask.id == secaoId).first()
+        if not user:
+            return None
+        
+        db.delete(user)
+        db.commit()
