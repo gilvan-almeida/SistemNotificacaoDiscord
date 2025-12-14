@@ -33,4 +33,10 @@ class TaskRepository:
         
         db.delete(task)
         db.commit()
+        
+    @staticmethod
+    def salvarObject(db: Session, task: Task):
+        db.commit()
+        db.refresh(task)
+        return task
 

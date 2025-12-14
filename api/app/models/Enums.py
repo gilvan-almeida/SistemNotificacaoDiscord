@@ -17,3 +17,15 @@ class statusSecaoEnum(PyEnum):
     ATIVA = "Ativa"
     PAUSADA = "Pausada"
     FINALIZADA = "Finalizada"
+
+class statusHistory(PyEnum):
+    CRIADA = "Criada"
+    INICIADA = "Iniciada"
+    PAUSADA = "Pausada"
+    RETOMADA = "Retomada"
+    FINALIZADA = "Finalizada"
+
+class statusReport(PyEnum):
+    SUBMETIDO = "Submetido"
+    RETORNADO = "Retornado"
+    APROVADO = "Aprovado"

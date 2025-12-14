@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from config.database import sessionLocal
 from typing import List
-from schemas.Usuario import UsuarioCreate, UsuarioResponse, UsuarioUpdate
+from schemas.Usuario import UsuarioCreate, UsuarioResponse, UsuarioUpdate, UsuarioAuthentic
 from service.UsuarioService import UsuarioService
 
 
@@ -20,9 +20,12 @@ def get_db():
 def criarUsuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     return UsuarioService.criarUsuario(usuario, db)
 
+
 @router.get("/{discordId}", response_model = UsuarioResponse)
 def buscarUserDiscordId(discordId: str, db: Session = Depends(get_db)):
     return UsuarioService.buscarUserDiscordId(db, discordId)
+
+
 
 @router.get("/", response_model= List[UsuarioResponse])
 def listarUsuario(db: Session = Depends(get_db)):
@@ -33,6 +36,7 @@ def listarUsuario(db: Session = Depends(get_db)):
 def editarUser(id: int, newdados: UsuarioUpdate, db: Session = Depends(get_db)):
     newdados_dict = newdados.model_dump(exclude_unset=True)
     return UsuarioService.editarDadosUser(db, id, newdados_dict)
+
 
 @router.delete("/{id}")
 def deleteUser(id: int, db: Session = Depends(get_db)):

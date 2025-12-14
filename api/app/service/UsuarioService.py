@@ -1,11 +1,14 @@
 from fastapi import HTTPException
 from models.Usuario import Usuario
-from schemas.Usuario import UsuarioResponse
+from schemas.Usuario import UsuarioResponse, UsuarioAuthentic, UsuarioCreate
 from Repository.UsuarioRepository import UsuarioRepository
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt_sha256"], deprecated = "auto")
+
 
 class UsuarioService:
-    @staticmethod
-    def criarUsuario(usuario: Usuario, db):
+    def criarUsuario(usuario: UsuarioCreate, db):
         if UsuarioRepository.getEmailUser(db, usuario.email):
             raise HTTPException(status_code=400, detail  ="Email ja cadastrado")
         
@@ -15,10 +18,12 @@ class UsuarioService:
         if UsuarioRepository.getDiscordID(db, usuario.discordId):
             raise HTTPException(status_code = 400, detail = "DiscordId ja cadastrado")
         
+        senhaHash = pwd_context.hash(str(usuario.senha))
+
         newUsuario = Usuario(
             name = usuario.name,
             email = usuario.email,
-            senha = usuario.senha,
+            senha = senhaHash,
             matricula = usuario.matricula,
             acesso = usuario.acesso,
             discordId =  usuario.discordId
@@ -58,4 +63,3 @@ class UsuarioService:
         
         return {"message": "Usuário deletado com sucesso"}
     
-

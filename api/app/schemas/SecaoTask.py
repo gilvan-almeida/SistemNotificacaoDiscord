@@ -18,6 +18,8 @@ class SecaoTaskBase(BaseModel):
         "from_attributes": True
     }
 
+    
+
 class SecaoTaskCreate(BaseModel):
     taskId: int
     userId: int

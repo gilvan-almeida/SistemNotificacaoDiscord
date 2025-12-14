@@ -22,6 +22,7 @@ class UsuarioRepository:
     @staticmethod 
     def getMatriculaUser(db: Session, matricula: int):
         return db.query(Usuario).filter(Usuario.matricula == matricula).first()
+    
 
     @staticmethod
     def listarUsuarios(db: Session):

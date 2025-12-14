@@ -1,13 +1,25 @@
 from schemas.SecaoTask import SecaoTaskBase, SecaoTaskCreate, SecaoTaskResponse
 from models.SecaoTask import SecaoTask
-from models.Enums import statusSecaoEnum, statusTask
+from models.TaskHistory import TaskHistory
+from models.Enums import statusSecaoEnum, statusTask, statusHistory
 from fastapi import HTTPException
 from datetime import datetime, timezone, timedelta
 from Repository.SecaoTaskRepository import SecaoTaskRepository
 from Repository.TaskRepository import TaskRepository
+from Repository.TaskHistoryRepository import TaskHistoryRepository
 from sqlalchemy.orm import Session
 
 class SecaoTaskService:
+
+
+    @staticmethod
+    def registerHistorico(db: Session, secao: SecaoTask, action: statusHistory, description: str):
+        historic = TaskHistory(
+            secaoTaskId = secao.id, 
+            action = action, 
+            description = description)
+        return TaskHistoryRepository.criarTaskHistory(db, historic)
+
 
     @staticmethod
     def criarSecao(db: Session, secao: SecaoTaskCreate):
@@ -30,7 +42,16 @@ class SecaoTaskService:
             timeSessionS=0
         )
 
-        return SecaoTaskRepository.criarSecao(db, newSecao)
+        newSecao = SecaoTaskRepository.criarSecao(db, newSecao)
+
+        SecaoTaskService.registerHistorico(
+            db,
+            newSecao,
+            statusHistory.CRIADA,
+            "Sessão foi Criada"
+        )
+
+        return newSecao
     
     @staticmethod
     def pausarSecao(db: Session, secaoId: int):
@@ -38,8 +59,7 @@ class SecaoTaskService:
 
         if not secao:
             raise HTTPException(404, "Sessão não encontrada")
-
-
+        
         timeNow = datetime.now(timezone.utc)
 
         elapse = int((timeNow - secao.timeStart).total_seconds())
@@ -52,7 +72,20 @@ class SecaoTaskService:
         secao.timeStart = None
         secao.statusSecao = statusSecaoEnum.PAUSADA
 
-        return SecaoTaskRepository.salvarObject(db, secao)
+        SecaoTaskRepository.salvarObject(db, secao)
+
+        SecaoTaskService.registerHistorico(
+            db, 
+            secao,
+            statusHistory.PAUSADA,
+            "Sessão Pausada pelo bot"
+        )
+
+        return secao
+
+
+
+
     
     @staticmethod
     def retomarSecao(db: Session, secaoId: int):
@@ -71,12 +104,21 @@ class SecaoTaskService:
         secao.timeStart = datetime.now(timezone.utc)
         secao.statusSecao = statusSecaoEnum.ATIVA
 
-        return SecaoTaskRepository.salvarObject(db, secao)
-    
+        SecaoTaskRepository.salvarObject(db, secao)
+
+        SecaoTaskService.registerHistorico(
+            db, 
+            secao,
+            statusHistory.RETOMADA,
+            "Sessão Retomada pelo bot"
+        )
+
+        return secao
+
+     
     @staticmethod
     def finalizarSecao(db: Session, secaoId: int):
         secao = SecaoTaskRepository.getSecaoId(db, secaoId)
-        task = TaskRepository.getTaskId(db, secao.taskId)
 
         if not secao:
             raise HTTPException(404, "Sessão não encontrada")    
@@ -96,11 +138,27 @@ class SecaoTaskService:
         secao.timeStart = None
         secao.timeEnd = timeNow
 
+        task = TaskRepository.getTaskId(db, secao.taskId)
+
+        print(f"🔍 Task encontrada: {task.id if task else 'None'}")
+        print(f"📝 Status atual da task: {task.status if task else 'None'}")
 
         if task:
             task.status = statusTask.ENCERRADO
+            TaskRepository.salvarObject(db, task)
+            print(f"Task {task.id} atualizada para status: {task.status}")
         
-        return SecaoTaskRepository.salvarObject(db, secao)
+        SecaoTaskRepository.salvarObject(db, secao)
+
+        SecaoTaskService.registerHistorico(
+            db, 
+            secao,
+            statusHistory.FINALIZADA,
+            "Sessão finalizada pelo Bot"
+        )
+
+        return secao
+
 
 
     @staticmethod

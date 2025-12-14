@@ -16,3 +16,4 @@ class SecaoTask(Base):
     timeStart = Column(DateTime(timezone = True),default = lambda: datetime.now(timezone.utc), nullable = True )
     timeEnd = Column(DateTime(timezone = True), nullable = True)
     timeSessionS = Column(Integer, nullable = True)
+    history = relationship("TaskHistory", back_populates="secaoTask")

@@ -11,3 +11,4 @@ bot/.env
 .flaskenv
 
 
+Frontend/src/.env

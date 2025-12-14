@@ -1,0 +1,16 @@
+.textLabel{
+    font-size: 18px;
+    color: black;
+}
+.boxInput input{
+    background-color: white;
+    color: black;
+}
+.checkBoxInput label{
+    color: black;
+}
+.checkBoxInput input{
+    border-radius: 3px;
+
+    border: 1px solid black;
+}

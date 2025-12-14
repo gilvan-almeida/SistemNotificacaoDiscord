@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from services.api import getTaskUser
 from config.settings import TOKEN_BOT
 
 intents = discord.Intents.default()
@@ -15,9 +16,12 @@ async def loadCogs():
     await bot.load_extension("cogs.minhasTaskCog")
 
 
+
 @bot.event
 async def on_ready():
     print("Aqui ta pocando tudooo papai")
     await loadCogs()
+
+
 
 bot.run(TOKEN_BOT)

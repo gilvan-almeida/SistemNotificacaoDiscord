@@ -19,6 +19,7 @@ class TaskService:
         newTask = Task(
             title = task.title,
             description = task.description,
+            projectName = task.projectName,
             status = task.status,
             criadorTaksId = task.criadorTaskId ,
             usuarioTaskId = task.usuarioTaskId,
